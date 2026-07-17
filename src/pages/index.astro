@@ -1,0 +1,172 @@
+---
+import Hero from '../components/Hero.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+import { siteConfig } from '../config';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import ProjectCard from '../components/ProjectCard.astro';
+import PublicationItem from '../components/PublicationItem.astro';
+import { getPublications } from '../lib/publications';
+
+const areas = [
+  [
+    'Generative models',
+    'Evaluation of the privacy and utility provided by artificial-intelligence models.',
+  ],
+  [
+    'Learning from obscured data',
+    'Encrypted traffic classification and website fingerprinting under realistic conditions.',
+  ],
+  [
+    'Collaborative ML training',
+    'Lightweight federated-learning solutions that support privacy-aware collaboration.',
+  ],
+];
+const projects = (await getCollection('projects', ({ data }) => !data.draft && data.featured))
+  .sort((a, b) => b.data.year - a.data.year)
+  .slice(0, 3);
+const publications = getPublications()
+  .filter((item) => item.selected)
+  .slice(0, 4);
+---
+
+<BaseLayout title={siteConfig.name} description={siteConfig.shortDescription}>
+  <Hero />
+  <section class="section" data-reveal>
+    <div class="container">
+      <SectionHeading
+        eyebrow="Focus"
+        title="What I work on"
+        description="Research questions where privacy requirements and practical machine-learning systems meet."
+      />
+      <div class="focus-list">
+        {
+          areas.map(([title, description], index) => (
+            <article>
+              <span aria-hidden="true">0{index + 1}</span>
+              <h3>{title}</h3>
+              <p class="muted">{description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  {
+    projects.length > 0 && (
+      <section class="section" data-reveal>
+        <div class="container">
+          <>
+            <SectionHeading eyebrow="Selected work" title="Projects" />
+            <div class="project-grid">
+              {projects.map((project) => (
+                <ProjectCard project={project} />
+              ))}
+            </div>
+          </>
+        </div>
+      </section>
+    )
+  }
+  {
+    publications.length > 0 && (
+      <section class="section" data-reveal>
+        <div class="container">
+          <SectionHeading eyebrow="Research outputs" title="Selected publications" />
+          {publications.map((publication) => (
+            <PublicationItem publication={publication} />
+          ))}
+          <p class="all-link">
+            <a href="/publications">View all publications</a>
+          </p>
+        </div>
+      </section>
+    )
+  }
+  <section class="section" data-reveal>
+    <div class="container split">
+      <SectionHeading eyebrow="About" title="Research and background" />
+      <div class="copy">
+        <p>
+          I am a PhD student at NICS Lab, University of Málaga. My research focuses on data
+          protection and privacy in artificial intelligence, including generative models, encrypted
+          traffic analysis and federated learning.
+        </p>
+        <p>From February to April 2026, I was a visiting researcher at COSIC, KU Leuven.</p>
+      </div>
+    </div>
+  </section>
+  <section class="section" data-reveal>
+    <div class="container split">
+      <div>
+        <p class="eyebrow">Contact</p>
+        <h2>Get in touch</h2>
+      </div>
+      <div class="copy">
+        <p class="muted">
+          For research-related enquiries or potential collaborations, feel free to contact me by
+          email or through LinkedIn.
+        </p>
+        <SocialLinks labels={['Email', 'LinkedIn', 'GitHub']} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .focus-list {
+    border-top: 1px solid var(--color-border);
+  }
+  article {
+    display: grid;
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+    gap: var(--space-5);
+    grid-template-columns: 2.5rem minmax(12rem, 0.65fr) minmax(0, 1fr);
+  }
+  article span {
+    color: var(--color-accent);
+    font:
+      0.75rem ui-monospace,
+      monospace;
+  }
+  article p {
+    max-width: 38rem;
+  }
+  .split {
+    display: grid;
+    gap: var(--space-7);
+    grid-template-columns: minmax(14rem, 0.7fr) minmax(0, 1.3fr);
+  }
+  .split :global(.section-heading) {
+    margin-bottom: 0;
+  }
+  .split h2 {
+    max-width: 18ch;
+    margin-top: var(--space-3);
+  }
+  .copy {
+    display: grid;
+    align-content: end;
+    max-width: 42rem;
+    gap: var(--space-5);
+  }
+  .project-grid {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .all-link {
+    margin-top: var(--space-5);
+  }
+  @media (max-width: 48rem) {
+    article,
+    .split {
+      grid-template-columns: 1fr;
+    }
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,137 @@
+---
+import { siteConfig } from '../config';
+import type { Publication } from '../lib/publications';
+interface Props {
+  publication: Publication;
+}
+const { publication } = Astro.props;
+const normalize = (value: string) =>
+  value
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase();
+const variants = siteConfig.authorNameVariants.map(normalize);
+const links = [
+  ['DOI', publication.doi ? `https://doi.org/${publication.doi}` : undefined],
+  ['PDF', publication.pdf],
+  ['Code', publication.code],
+  ['Project', publication.project],
+  ['Slides', publication.slides],
+  ['Poster', publication.poster],
+  ['Video', publication.video],
+].filter((item): item is [string, string] => Boolean(item[1]));
+---
+
+<article
+  class="publication"
+  data-publication
+  data-year={publication.year ?? 'undated'}
+  data-type={publication.type}
+  data-keywords={publication.keywords.join(' ').toLowerCase()}
+>
+  <div class="publication__meta">
+    <span>{publication.year ?? 'n.d.'}</span><span
+      >{publication.category ?? publication.sourceType}</span
+    >
+  </div>
+  <div class="publication__body">
+    <h3>
+      {publication.url ? <a href={publication.url}>{publication.title}</a> : publication.title}
+    </h3>
+    <p class="authors">
+      {
+        publication.authors.map((author, index) => (
+          <>
+            <span class:list={{ self: variants.includes(normalize(author.display)) }}>
+              {author.display}
+            </span>
+            {index < publication.authors.length - 1 ? ', ' : ''}
+          </>
+        ))
+      }
+    </p>
+    {
+      publication.venue && (
+        <p class="venue">
+          {publication.venue}
+          {publication.volume && `, ${publication.volume}`}
+          {publication.number && `(${publication.number})`}
+          {publication.pages && `, ${publication.pages}`}
+        </p>
+      )
+    }
+    <div class="publication__actions">
+      {links.map(([label, href]) => <a href={href}>{label}</a>)}
+      <button type="button" class="copy-bibtex" data-bibtex={publication.rawBibtex}
+        >Copy BibTeX</button
+      >
+    </div>
+  </div>
+</article>
+<style>
+  .publication {
+    display: grid;
+    padding-block: var(--space-5);
+    border-top: 1px solid var(--color-border);
+    gap: var(--space-5);
+    grid-template-columns: 7rem minmax(0, 1fr);
+  }
+  .publication__meta {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    color: var(--color-text-muted);
+    font:
+      0.74rem ui-monospace,
+      monospace;
+    text-transform: uppercase;
+  }
+  .publication__body {
+    display: grid;
+    gap: var(--space-2);
+  }
+  h3 a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  h3 a:hover {
+    color: var(--color-accent);
+  }
+  .authors,
+  .venue {
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+  }
+  .self {
+    color: var(--color-text);
+    font-weight: 700;
+  }
+  .publication__actions {
+    display: flex;
+    margin-top: var(--space-2);
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .publication__actions a,
+  .publication__actions button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--color-accent);
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 650;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  @media (max-width: 35rem) {
+    .publication {
+      gap: var(--space-2);
+      grid-template-columns: 1fr;
+    }
+    .publication__meta {
+      flex-direction: row;
+      gap: var(--space-3);
+    }
+  }
+</style>

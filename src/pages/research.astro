@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const areas = [
+  [
+    'Generative models',
+    'How can AI models preserve privacy while producing useful data?',
+    'Models trained on sensitive data can disclose information about their training records.',
+    'I evaluate both privacy and utility, studying generative approaches and empirical privacy risks.',
+  ],
+  [
+    'Learning from obscured data',
+    'What can machine learning infer when network content is encrypted?',
+    'Encryption protects content, but traffic patterns can still expose information about applications and websites.',
+    'I work on encrypted traffic classification and website fingerprinting using realistic datasets and reproducible evaluation.',
+  ],
+  [
+    'Collaborative ML training',
+    'How can multiple participants train models without centralising all their data?',
+    'Federated learning can reduce data exposure, but its communication and computation costs limit practical deployment.',
+    'I study lightweight federated-learning solutions for privacy-aware collaborative training.',
+  ],
+];
+---
+
+<BaseLayout
+  title="Research"
+  description="Research directions in privacy-preserving AI, synthetic data and applied machine learning."
+>
+  <header class="page-header container">
+    <p class="eyebrow">Research</p><h1>
+      Research guided by measurable privacy and practical utility.
+    </h1><p class="muted">
+      My work examines how AI systems handle sensitive data: what they learn, what they reveal and
+      whether they remain useful under realistic constraints.
+    </p>
+  </header>
+  <div class="areas container">
+    {
+      areas.map(([title, question, context, approach], index) => (
+        <article data-reveal>
+          <>
+            <span aria-hidden="true">0{index + 1}</span>
+            <div>
+              <>
+                <h2>{title}</h2>
+                <strong>{question}</strong>
+                <div class="details">
+                  <>
+                    <section>
+                      <>
+                        <h3>Context</h3>
+                        <p class="muted">{context}</p>
+                      </>
+                    </section>
+                    <section>
+                      <>
+                        <h3>Approach</h3>
+                        <p class="muted">{approach}</p>
+                      </>
+                    </section>
+                  </>
+                </div>
+                <a href="/publications">Related publications</a>
+              </>
+            </div>
+          </>
+        </article>
+      ))
+    }
+  </div>
+</BaseLayout>
+<style>
+  .page-header {
+    display: grid;
+    padding-block: var(--space-9) var(--space-8);
+    gap: var(--space-4);
+  }
+  .page-header h1 {
+    max-width: 17ch;
+  }
+  .page-header > p:last-child {
+    max-width: var(--text-width);
+    font-size: 1.15rem;
+  }
+  .areas {
+    padding-bottom: var(--space-9);
+  }
+  article {
+    display: grid;
+    padding-block: var(--space-7);
+    border-top: 1px solid var(--color-border);
+    gap: var(--space-5);
+    grid-template-columns: 3rem 1fr;
+  }
+  article > span {
+    color: var(--color-accent);
+    font:
+      0.78rem ui-monospace,
+      monospace;
+  }
+  article > div {
+    display: grid;
+    gap: var(--space-5);
+  }
+  strong {
+    font-size: 1.15rem;
+  }
+  .details {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .details section {
+    display: grid;
+    gap: var(--space-2);
+  }
+  h3 {
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 42rem) {
+    article,
+    .details {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

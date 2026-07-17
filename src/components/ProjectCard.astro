@@ -1,0 +1,60 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+const { project } = Astro.props;
+---
+
+<article>
+  <div class="meta"><span>{project.data.year}</span><span>{project.data.status}</span></div>
+  <h3><a href={`/projects/${project.id}/`}>{project.data.title}</a></h3>
+  <p class="muted">{project.data.summary}</p>
+  <ul aria-label="Technologies">{project.data.technologies.map((item) => <li>{item}</li>)}</ul>
+</article>
+<style>
+  article {
+    display: grid;
+    height: 100%;
+    padding: var(--space-5);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    gap: var(--space-3);
+    transition:
+      transform var(--transition),
+      border-color var(--transition);
+  }
+  article:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+  }
+  .meta,
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+  }
+  .meta {
+    justify-content: space-between;
+    color: var(--color-text-muted);
+    font:
+      0.72rem ui-monospace,
+      monospace;
+    text-transform: uppercase;
+  }
+  h3 a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  ul li {
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+    font-size: 0.72rem;
+  }
+</style>

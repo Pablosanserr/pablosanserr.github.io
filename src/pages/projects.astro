@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import ProjectCard from '../components/ProjectCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.year - a.data.year,
+);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Software, experimental pipelines and technical contributions by Pablo Sánchez Serrano."
+>
+  <header class="page-header container">
+    <p class="eyebrow">Projects</p><h1>Technical work connected to research questions.</h1><p
+      class="muted"
+    >
+      Implementations, datasets and experimental systems are published when ready to be examined and
+      reused.
+    </p>
+  </header>
+  {
+    projects.length ? (
+      <section class="project-grid container" aria-label="Project list">
+        {projects.map((project) => (
+          <ProjectCard project={project} />
+        ))}
+      </section>
+    ) : (
+      <section class="empty container" aria-labelledby="status">
+        <>
+          <h2 id="status">No public project entries at present.</h2>
+          <p class="muted">
+            Research outputs with available code or supporting material are listed on the
+            publications page. Draft records remain excluded.
+          </p>
+          <a href="/publications">Browse publications</a>
+        </>
+      </section>
+    )
+  }
+</BaseLayout>
+<style>
+  .page-header {
+    display: grid;
+    padding-block: var(--space-9) var(--space-7);
+    gap: var(--space-4);
+  }
+  .page-header h1 {
+    max-width: 16ch;
+  }
+  .page-header > p:last-child,
+  .empty {
+    max-width: var(--text-width);
+  }
+  .project-grid {
+    display: grid;
+    padding-bottom: var(--space-9);
+    gap: var(--space-5);
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .empty {
+    display: grid;
+    margin-bottom: var(--space-9);
+    margin-left: max(1rem, calc((100% - var(--content-width)) / 2));
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    gap: var(--space-3);
+  }
+  .empty h2 {
+    font-size: 1.35rem;
+  }
+  @media (max-width: 48rem) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,104 @@
+---
+import { siteConfig } from '../config';
+import SocialLinks from './SocialLinks.astro';
+---
+
+<section class="hero">
+  <div class="container hero__layout">
+    <div class="hero__content">
+      <p class="eyebrow">Privacy · Artificial intelligence · Cybersecurity</p>
+      <h1>I research how to build useful AI systems without compromising sensitive data.</h1>
+      <p class="hero__intro muted">
+        PhD researcher studying generative models, learning from obscured data and lightweight
+        federated-learning solutions.
+      </p>
+      <div class="hero__actions">
+        <a class="button" href="/research">Explore my work</a>
+        <a class="button button--secondary" href={siteConfig.cvPath}>Download CV</a>
+      </div>
+      <SocialLinks />
+    </div>
+    <figure>
+      <img
+        src={siteConfig.profileImage}
+        width="894"
+        height="895"
+        alt={siteConfig.profileImageAlt}
+        fetchpriority="high"
+      />
+    </figure>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: var(--space-8) var(--space-9);
+  }
+  .hero__layout {
+    display: grid;
+    align-items: center;
+    gap: clamp(2.5rem, 7vw, 7rem);
+    grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr);
+  }
+  .hero__content {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-5);
+  }
+  h1 {
+    max-width: 18ch;
+    font-size: clamp(2.45rem, 5.4vw, 4.65rem);
+  }
+  .hero__intro {
+    max-width: 42rem;
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+  }
+  .hero__actions {
+    display: flex;
+    margin-block: var(--space-2);
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  figure {
+    position: relative;
+    width: min(100%, 16rem);
+    margin: 0;
+    justify-self: end;
+  }
+  figure::before {
+    position: absolute;
+    z-index: -1;
+    right: -0.75rem;
+    bottom: -0.75rem;
+    width: 55%;
+    height: 55%;
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius-lg);
+    content: '';
+    opacity: 0.4;
+  }
+  img {
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    object-fit: cover;
+  }
+  @media (max-width: 48rem) {
+    .hero__layout {
+      grid-template-columns: 1fr;
+    }
+    figure {
+      width: min(65%, 14rem);
+      grid-row: 1;
+      justify-self: start;
+    }
+  }
+  @media (max-width: 30rem) {
+    .hero__actions,
+    .hero__actions .button {
+      width: 100%;
+    }
+  }
+</style>

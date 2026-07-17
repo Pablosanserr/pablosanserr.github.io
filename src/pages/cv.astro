@@ -1,0 +1,185 @@
+---
+import { siteConfig } from '../config';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PublicationItem from '../components/PublicationItem.astro';
+import { getPublications } from '../lib/publications';
+const selectedPublications = getPublications().filter((item) => item.selected);
+---
+
+<BaseLayout
+  title="CV"
+  description="Curriculum vitae of Pablo Sánchez Serrano, Telecommunications Engineer and PhD researcher."
+>
+  <header class="cv-header container">
+    <div>
+      <p class="eyebrow">Curriculum vitae</p><h1>Pablo Sánchez Serrano</h1><p class="muted">
+        Telecommunications Engineer and PhD researcher working at the intersection of privacy,
+        cybersecurity and artificial intelligence.
+      </p>
+    </div>
+  </header>
+  <div class="cv container">
+    <aside>
+      <section>
+        <h2>Research interests</h2><ul>
+          <li>Privacy and utility evaluation</li><li>Generative models</li><li>
+            Encrypted traffic classification
+          </li><li>Website fingerprinting</li><li>Federated learning</li>
+        </ul>
+      </section><section>
+        <h2>Technical skills</h2><p class="muted">
+          Python, machine-learning experimentation, data analysis, generative modelling and
+          reproducible evaluation.
+        </p>
+      </section><section>
+        <h2>Contact</h2><a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+      </section>
+    </aside>
+    <div class="main">
+      <section>
+        <h2>Profile</h2><p>
+          PhD researcher at the University of Málaga studying privacy and AI. My work explores AI as
+          a privacy-enhancing technology and methods for protecting sensitive information throughout
+          the machine-learning lifecycle.
+        </p>
+      </section><section>
+        <h2>Experience</h2><article>
+          <span>Feb—Apr 2026</span><div>
+            <h3>Visiting Researcher</h3><p>COSIC, KU Leuven · Leuven, Belgium</p><p class="muted">
+              Research stay focused on privacy and artificial intelligence, collaborating with
+              researchers in privacy-enhancing technologies.
+            </p>
+          </div>
+        </article><article>
+          <span>2024—present</span><div>
+            <h3>PhD Researcher</h3><p>University of Málaga · NICS Lab</p><p class="muted">
+              Research on privacy-preserving AI, synthetic data generation and the protection of
+              sensitive information during AI training.
+            </p>
+          </div>
+        </article><article>
+          <span>2023—2024</span><div>
+            <h3>Research Intern</h3><p>Decentralized Security · Málaga, Spain</p><p class="muted">
+              Research and development on blockchain security, including the protection of
+              cryptographic material in Ethereum clients using an open-source secure element.
+            </p>
+          </div>
+        </article>
+      </section><section>
+        <h2>Education</h2><article>
+          <span>2024—present</span><div>
+            <h3>PhD Student</h3><p>University of Málaga</p><p class="muted">
+              Research focus: data protection and privacy in artificial intelligence.
+            </p>
+          </div>
+        </article><article>
+          <span>2022—2025</span><div>
+            <h3>MSc in Telecommunications Engineering</h3><p>University of Málaga</p>
+          </div>
+        </article><article>
+          <span>2022—2024</span><div>
+            <h3>MSc in Telematics and Telecommunication Networks</h3><p>University of Málaga</p>
+          </div>
+        </article><article>
+          <span>2018—2022</span><div>
+            <h3>BSc in Telematics</h3><p>University of Málaga</p>
+          </div>
+        </article>
+      </section><section>
+        <h2>Selected publications</h2>
+        {selectedPublications.map((publication) => <PublicationItem publication={publication} />)}
+      </section><section>
+        <h2>Honors and awards</h2><article>
+          <span>2022</span><div>
+            <h3>Best Academic Record in Telematics Engineering</h3><p>
+              Official College of Telecommunications Engineers of Eastern Andalusia and Melilla
+            </p>
+          </div>
+        </article>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+<style>
+  .cv-header {
+    display: flex;
+    padding-block: var(--space-8);
+    align-items: end;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--color-border);
+    gap: var(--space-6);
+  }
+  .cv-header > div {
+    display: grid;
+    max-width: 48rem;
+    gap: var(--space-3);
+  }
+  .cv-header h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .cv {
+    display: grid;
+    padding-block: var(--space-7) var(--space-9);
+    gap: var(--space-7);
+    grid-template-columns: minmax(14rem, 0.55fr) minmax(0, 1.45fr);
+  }
+  aside,
+  .main {
+    display: grid;
+    align-content: start;
+    gap: var(--space-7);
+  }
+  aside section,
+  .main > section {
+    display: grid;
+    gap: var(--space-3);
+  }
+  aside h2 {
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .main > section {
+    padding-bottom: var(--space-7);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .main h2 {
+    font-size: 1.65rem;
+  }
+  article {
+    display: grid;
+    gap: var(--space-5);
+    grid-template-columns: 8rem 1fr;
+  }
+  article span {
+    color: var(--color-text-muted);
+    font:
+      0.76rem ui-monospace,
+      monospace;
+  }
+  @media (max-width: 48rem) {
+    .cv-header {
+      align-items: start;
+      flex-direction: column;
+    }
+    .cv {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 32rem) {
+    article {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media print {
+    .cv-header .button {
+      display: none;
+    }
+    .cv {
+      padding-block: 1rem;
+    }
+    .main > section {
+      break-inside: avoid;
+    }
+  }
+</style>

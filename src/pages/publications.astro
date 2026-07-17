@@ -1,0 +1,128 @@
+---
+import PublicationItem from '../components/PublicationItem.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPublications } from '../lib/publications';
+const publications = getPublications();
+const years = [...new Set(publications.map((item) => item.year).filter(Boolean))] as number[];
+const types = [...new Set(publications.map((item) => item.type))];
+---
+
+<BaseLayout
+  title="Publications"
+  description="Publications by Pablo Sánchez Serrano on privacy and artificial intelligence."
+>
+  <header class="page-header container">
+    <p class="eyebrow">Publications</p><h1>Peer-reviewed work and research outputs.</h1><p
+      class="muted"
+    >
+      Publication records are maintained from one local BibTeX source.
+    </p>
+  </header>
+  <section class="container publication-list" aria-labelledby="publication-list-title">
+    <h2 id="publication-list-title" class="visually-hidden">Publication list</h2>
+    <div class="filters" aria-label="Filter publications">
+      <label
+        >Year<select data-filter-year
+          ><option value="all">All years</option>{
+            years.map((year) => <option value={year}>{year}</option>)
+          }</select
+        ></label
+      >
+      <label
+        >Type<select data-filter-type
+          ><option value="all">All types</option>{
+            types.map((type) => <option value={type}>{type}</option>)
+          }</select
+        ></label
+      >
+      <label>Keyword<input data-filter-keyword type="search" placeholder="e.g. privacy" /></label>
+    </div>
+    <p class="filter-status muted" aria-live="polite"></p>
+    {publications.map((publication) => <PublicationItem publication={publication} />)}
+  </section>
+  <script>
+    const items = [...document.querySelectorAll<HTMLElement>('[data-publication]')],
+      year = document.querySelector<HTMLSelectElement>('[data-filter-year]'),
+      type = document.querySelector<HTMLSelectElement>('[data-filter-type]'),
+      keyword = document.querySelector<HTMLInputElement>('[data-filter-keyword]'),
+      status = document.querySelector<HTMLElement>('.filter-status');
+    const filter = () => {
+      let shown = 0;
+      items.forEach((item) => {
+        const visible =
+          (!year || year.value === 'all' || item.dataset.year === year.value) &&
+          (!type || type.value === 'all' || item.dataset.type === type.value) &&
+          (!keyword ||
+            !keyword.value.trim() ||
+            item.dataset.keywords?.includes(keyword.value.trim().toLowerCase()));
+        item.hidden = !visible;
+        if (visible) shown++;
+      });
+      if (status) status.textContent = `Showing ${shown} of ${items.length} publications.`;
+    };
+    [year, type, keyword].forEach((control) => control?.addEventListener('input', filter));
+    filter();
+    document.querySelectorAll<HTMLButtonElement>('.copy-bibtex').forEach((button) =>
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(button.dataset.bibtex ?? '');
+          button.textContent = 'Copied';
+        } catch {
+          button.textContent = 'Copy unavailable';
+        }
+        setTimeout(() => (button.textContent = 'Copy BibTeX'), 1600);
+      }),
+    );
+  </script>
+</BaseLayout>
+<style>
+  .page-header {
+    display: grid;
+    padding-block: var(--space-9) var(--space-7);
+    gap: var(--space-4);
+  }
+  .page-header h1 {
+    max-width: 16ch;
+  }
+  .page-header > p:last-child {
+    max-width: var(--text-width);
+  }
+  .publication-list {
+    padding-bottom: var(--space-9);
+  }
+  .filters {
+    display: flex;
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+  label {
+    display: grid;
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+    font-weight: 650;
+    gap: var(--space-1);
+  }
+  select,
+  input {
+    min-height: 2.5rem;
+    padding: 0.4rem 0.65rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+  }
+  .filter-status {
+    margin-block: var(--space-4);
+    font-size: 0.82rem;
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+</style>

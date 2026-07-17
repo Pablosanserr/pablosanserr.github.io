@@ -1,0 +1,82 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => !data.draft);
+  return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
+}
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={project.data.title} description={project.data.summary}>
+  <article class="project container">
+    <header>
+      <p class="eyebrow">{project.data.year} · {project.data.status}</p><h1>
+        {project.data.title}
+      </h1><p class="lead muted">{project.data.summary}</p><dl>
+        <div><dt>Role</dt><dd>{project.data.role}</dd></div><div>
+          <dt>Technologies</dt><dd>{project.data.technologies.join(', ')}</dd>
+        </div>
+      </dl>
+    </header><div class="content"><Content /></div>{
+      project.data.links.length > 0 && (
+        <nav aria-label="Project resources">
+          {project.data.links.map((link) => (
+            <a href={link.url}>{link.label}</a>
+          ))}
+        </nav>
+      )
+    }
+  </article>
+</BaseLayout>
+<style>
+  .project {
+    padding-block: var(--space-9);
+  }
+  header {
+    display: grid;
+    max-width: var(--text-width);
+    gap: var(--space-4);
+  }
+  h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .lead {
+    font-size: 1.15rem;
+  }
+  dl {
+    display: flex;
+    margin: var(--space-4) 0 0;
+    flex-wrap: wrap;
+    gap: var(--space-5);
+  }
+  dl div {
+    display: grid;
+    gap: var(--space-1);
+  }
+  dt {
+    color: var(--color-text-muted);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+  }
+  dd {
+    margin: 0;
+  }
+  .content {
+    max-width: var(--text-width);
+    margin-top: var(--space-8);
+  }
+  .content :global(h2) {
+    margin-block: var(--space-6) var(--space-3);
+    font-size: 1.6rem;
+  }
+  .content :global(p) {
+    margin-block: var(--space-3);
+  }
+  nav {
+    display: flex;
+    margin-top: var(--space-6);
+    gap: var(--space-4);
+  }
+</style>

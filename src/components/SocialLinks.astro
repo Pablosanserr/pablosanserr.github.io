@@ -1,0 +1,35 @@
+---
+import { siteConfig } from '../config';
+interface Props {
+  labels?: string[];
+}
+const { labels } = Astro.props;
+const links = labels
+  ? siteConfig.socials.filter((link) => labels.includes(link.label))
+  : siteConfig.socials;
+---
+
+<ul aria-label="Professional profiles">
+  {
+    links.map((link) => (
+      <li>
+        <a href={link.href}>{link.label === 'Email' ? siteConfig.email : link.label}</a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  ul {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-5);
+    list-style: none;
+  }
+  a {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+</style>

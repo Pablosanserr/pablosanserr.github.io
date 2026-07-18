@@ -7,10 +7,13 @@ import SocialLinks from './SocialLinks.astro';
   <div class="container hero__layout">
     <div class="hero__content">
       <p class="eyebrow">Privacy · Artificial intelligence · Cybersecurity</p>
-      <h1>I research how to build useful AI systems without compromising sensitive data.</h1>
+      <h1>
+        <span>Privacy for AI.</span>
+        <span>AI for privacy.</span>
+      </h1>
       <p class="hero__intro muted">
-        PhD researcher studying generative models, learning from obscured data and lightweight
-        federated-learning solutions.
+        I study how to protect sensitive data in AI systems and how machine learning can help
+        address privacy and cybersecurity challenges.
       </p>
       <div class="hero__actions">
         <a class="button" href="/research">Explore my work</a>
@@ -37,8 +40,8 @@ import SocialLinks from './SocialLinks.astro';
   .hero__layout {
     display: grid;
     align-items: center;
-    gap: clamp(2.5rem, 7vw, 7rem);
-    grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.6fr);
+    gap: clamp(2.5rem, 5vw, 5rem);
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 20rem);
   }
   .hero__content {
     display: grid;
@@ -46,8 +49,11 @@ import SocialLinks from './SocialLinks.astro';
     gap: var(--space-5);
   }
   h1 {
-    max-width: 18ch;
     font-size: clamp(2.45rem, 5.4vw, 4.65rem);
+  }
+  h1 span {
+    display: block;
+    white-space: nowrap;
   }
   .hero__intro {
     max-width: 42rem;
@@ -61,9 +67,9 @@ import SocialLinks from './SocialLinks.astro';
   }
   figure {
     position: relative;
-    width: min(100%, 16rem);
+    width: min(100%, 20rem);
     margin: 0;
-    justify-self: end;
+    justify-self: start;
   }
   figure::before {
     position: absolute;

@@ -15,10 +15,12 @@ export interface SiteConfig {
   authorNameVariants: string[];
 }
 
+const contactEmail = 'pablosanserr@gmail.com';
+
 export const siteConfig: SiteConfig = {
   name: 'Pablo Sánchez Serrano',
   shortDescription: 'Privacy, artificial intelligence, and applied research.',
-  email: 'pablosanserr@uma.es',
+  email: contactEmail,
   siteUrl: 'https://pablosanserr.github.io',
   profileImage: '/images/profile.jpg',
   profileImageAlt: 'Portrait of Pablo Sánchez Serrano',
@@ -31,7 +33,7 @@ export const siteConfig: SiteConfig = {
     },
     { label: 'LinkedIn', href: 'https://www.linkedin.com/in/pablo-sanchez-serrano/' },
     { label: 'ORCID', href: 'https://orcid.org/0009-0007-8769-0516' },
-    { label: 'Email', href: 'mailto:pablosanserr@uma.es' },
+    { label: 'Email', href: `mailto:${contactEmail}` },
   ],
   authorNameVariants: [
     'Pablo Sánchez Serrano',

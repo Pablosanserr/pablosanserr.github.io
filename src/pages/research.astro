@@ -1,30 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-const areas = [
-  [
-    'Encrypted traffic analysis',
-    'What can encrypted traffic reveal, and how can those inferences be prevented?',
-    'Encryption protects content, but traffic patterns can still expose information about applications and websites, creating privacy risks.',
-    'I study machine-learning methods for encrypted traffic classification and website fingerprinting, evaluating both attacks and defenses under realistic conditions.',
-  ],
-  [
-    'Generative models',
-    'How can AI models preserve privacy while producing useful data?',
-    'Models trained on sensitive data can disclose information about their training records.',
-    'I evaluate both privacy and utility, studying generative approaches and empirical privacy risks.',
-  ],
-  [
-    'Collaborative ML training',
-    'How can multiple participants train models without centralising all their data?',
-    'Federated learning can reduce data exposure, but its communication and computation costs limit practical deployment.',
-    'I study lightweight federated-learning solutions for privacy-aware collaborative training.',
-  ],
-];
+import { researchAreas } from '../content/research';
 ---
 
 <BaseLayout
   title="Research"
-  description="Research in encrypted traffic analysis, privacy-preserving AI and collaborative machine learning."
+  description="Research in encrypted traffic analysis and privacy-preserving synthetic data generation."
 >
   <header class="page-header container">
     <p class="eyebrow">Research</p><h1>Research at the intersection of AI and privacy.</h1><p
@@ -36,34 +17,26 @@ const areas = [
   </header>
   <div class="areas container">
     {
-      areas.map(([title, question, context, approach], index) => (
+      researchAreas.map(({ title, question, context, result, publicationId }) => (
         <article data-reveal>
-          <>
-            <span aria-hidden="true">0{index + 1}</span>
-            <div>
-              <>
-                <h2>{title}</h2>
-                <strong>{question}</strong>
-                <div class="details">
-                  <>
-                    <section>
-                      <>
-                        <h3>Context</h3>
-                        <p class="muted">{context}</p>
-                      </>
-                    </section>
-                    <section>
-                      <>
-                        <h3>Approach</h3>
-                        <p class="muted">{approach}</p>
-                      </>
-                    </section>
-                  </>
-                </div>
-                <a href="/publications">View all publications</a>
-              </>
-            </div>
-          </>
+          <h2>{title}</h2>
+          <strong>{question}</strong>
+          <div class="details">
+            <section>
+              <h3>Context</h3>
+              <p class="muted">{context}</p>
+            </section>
+            <section>
+              <h3>Result</h3>
+              <p class="muted">{result}</p>
+            </section>
+          </div>
+          <a
+            href={`/publications#publication-${publicationId}`}
+            aria-label={`View publication on ${title.toLowerCase()}`}
+          >
+            View publication
+          </a>
         </article>
       ))
     }
@@ -89,17 +62,7 @@ const areas = [
     display: grid;
     padding-block: var(--space-7);
     border-top: 1px solid var(--color-border);
-    gap: var(--space-5);
-    grid-template-columns: 3rem 1fr;
-  }
-  article > span {
-    color: var(--color-accent);
-    font:
-      0.78rem ui-monospace,
-      monospace;
-  }
-  article > div {
-    display: grid;
+    justify-items: start;
     gap: var(--space-5);
   }
   strong {
@@ -120,7 +83,6 @@ const areas = [
     text-transform: uppercase;
   }
   @media (max-width: 42rem) {
-    article,
     .details {
       grid-template-columns: 1fr;
     }

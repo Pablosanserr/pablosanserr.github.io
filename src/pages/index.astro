@@ -8,21 +8,8 @@ import { getCollection } from 'astro:content';
 import ProjectCard from '../components/ProjectCard.astro';
 import PublicationItem from '../components/PublicationItem.astro';
 import { getPublications } from '../lib/publications';
+import { researchAreas } from '../content/research';
 
-const areas = [
-  [
-    'Encrypted traffic analysis',
-    'Encrypted traffic classification and website fingerprinting, from understanding privacy attacks to developing effective defenses.',
-  ],
-  [
-    'Generative models',
-    'Evaluation of the privacy and utility provided by artificial-intelligence models.',
-  ],
-  [
-    'Collaborative ML training',
-    'Lightweight federated-learning solutions that support privacy-aware collaboration.',
-  ],
-];
 const projects = (await getCollection('projects', ({ data }) => !data.draft && data.featured))
   .sort((a, b) => b.data.year - a.data.year)
   .slice(0, 3);
@@ -42,11 +29,18 @@ const publications = getPublications()
       />
       <div class="focus-list">
         {
-          areas.map(([title, description], index) => (
+          researchAreas.map(({ title, result, publicationId }) => (
             <article>
-              <span aria-hidden="true">0{index + 1}</span>
               <h3>{title}</h3>
-              <p class="muted">{description}</p>
+              <div>
+                <p class="muted">{result}</p>
+                <a
+                  href={`/publications#publication-${publicationId}`}
+                  aria-label={`View publication on ${title.toLowerCase()}`}
+                >
+                  View publication
+                </a>
+              </div>
             </article>
           ))
         }
@@ -90,8 +84,8 @@ const publications = getPublications()
       <div class="copy">
         <p>
           I am a PhD student at NICS Lab, University of Málaga. My research focuses on data
-          protection and privacy in artificial intelligence, including generative models, encrypted
-          traffic analysis and federated learning.
+          protection and privacy in artificial intelligence, with a focus on synthetic data
+          generation and encrypted traffic analysis.
         </p>
         <p>From February to April 2026, I was a visiting researcher at COSIC, KU Leuven.</p>
       </div>
@@ -123,13 +117,12 @@ const publications = getPublications()
     padding-block: var(--space-5);
     border-bottom: 1px solid var(--color-border);
     gap: var(--space-5);
-    grid-template-columns: 2.5rem minmax(12rem, 0.65fr) minmax(0, 1fr);
+    grid-template-columns: minmax(12rem, 0.65fr) minmax(0, 1fr);
   }
-  article span {
-    color: var(--color-accent);
-    font:
-      0.75rem ui-monospace,
-      monospace;
+  article > div {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-2);
   }
   article p {
     max-width: 38rem;
